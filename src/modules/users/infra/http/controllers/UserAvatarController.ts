@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 
-import UpdateAvatarUser from "@modules/users/services/UpdateAvatarUser";
+import UpdateAvatarUser from "@modules/users/services/UpdateAvatarUserService";
 
 export default class UserAvatarController {
     public async create(

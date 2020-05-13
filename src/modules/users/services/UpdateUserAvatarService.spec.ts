@@ -1,6 +1,6 @@
 import FakesUsersRepository from "@modules/users/repositories/fakes/FakesUsersRepository";
 import FakeStorageProvider from "@shared/container/providers/StoredProvider/fakes/FakeStorageProvider";
-import UpdateUserAvatar from "./UpdateAvatarUser";
+import UpdateUserAvatar from "./UpdateAvatarUserService";
 
 describe("UpdateUserAvatar", () => {
     it("should be able to update avatar", async () => {

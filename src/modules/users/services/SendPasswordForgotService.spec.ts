@@ -59,6 +59,6 @@ describe("SendPasswordForgot", () => {
             email: "rodrigoaraujo990@gmail.com",
         });
 
-        expect(generateToken).toHaveBeenCalledWith(user.id);
+        await expect(generateToken).toHaveBeenCalledWith(user.id);
     });
 });

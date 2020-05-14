@@ -29,7 +29,7 @@ export default class ResetPasswordService {
                 "Token de atualização de senha não existe ou expirou",
             );
         }
-        const user = await this.usersRepository.findById(userToken.user_id.id);
+        const user = await this.usersRepository.findById(userToken.user_id);
         if (!user) {
             throw new AppError(
                 "O usuário não foi encontrado em nossa base de dados",

@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for appointments/services/ListProviderMonthAviabilityService.ts</title>
+    <title>Code coverage report for appointments/services/ListProviderDayAviabilityService.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">appointments/services</a> ListProviderMonthAviabilityService.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">appointments/services</a> ListProviderDayAviabilityService.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>24/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
@@ -109,7 +109,10 @@
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
 <a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -125,13 +128,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -143,16 +148,17 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">341x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -162,22 +168,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { injectable, inject } from "tsyringe";
-import { getDaysInMonth, getDate } from "date-fns";
+import { getHours, isAfter } from "date-fns";
 import IAppointmentsRepository from "../repositories/IAppointmentsRepository";
 &nbsp;
 interface IRequest {
     provider_id: string;
+    day: number;
     month: number;
     year: number;
 }
 &nbsp;
 type IResponse = Array&lt;{
-    day: number;
+    hour: number;
     avialable: boolean;
 }&gt;;
 &nbsp;
 @injectable()
-export default class ListProviderMonthAviabilityService {
+export default class ListProviderDayAviabilityService {
     constructor(
         @inject("AppointmentsRepository")
         private appointmentsRepository: IAppointmentsRepository,
@@ -185,28 +192,30 @@ export default class ListProviderMonthAviabilityService {
 &nbsp;
     public async execute({
         provider_id,
+        day,
         month,
         year,
     }: IRequest): Promise&lt;IResponse&gt; {
-        const appointmentsInMonth = await this.appointmentsRepository.findAllInMonthFromProvider(
-            { provider_id, month, year },
+        const appointments = await this.appointmentsRepository.findAllInDayFromProvider(
+            { provider_id, year, day, month },
         );
 &nbsp;
-        const numberOfDaysInMonth = getDaysInMonth(new Date(year, month - 1));
-        const eachDayMonth = Array.from(
-            { length: numberOfDaysInMonth },
-            (value, index) =&gt; index + 1,
+        const hourStart = 8;
+        const eachHourDay = Array.from(
+            { length: 10 },
+            (value, index) =&gt; index + hourStart,
         );
 &nbsp;
-        const availability = eachDayMonth.map(day =&gt; {
-            const appointmentsInDay = appointmentsInMonth.filter(
-                appointment =&gt; {
-                    return getDate(appointment.date) === day;
-                },
+        const currentDate = new Date(Date.now());
+        const availability = eachHourDay.map(hour =&gt; {
+            const hasAppointmentHour = appointments.find(
+                appointment =&gt; getHours(appointment.date) === hour,
             );
+            const compareDate = new Date(year, month - 1, day, hour);
             return {
-                day,
-                avialable: appointmentsInDay.length &lt; 10,
+                hour,
+                avialable:
+                    !hasAppointmentHour &amp;&amp; isAfter(compareDate, currentDate),
             };
         });
 &nbsp;

@@ -21,6 +21,13 @@ class Appoiment {
     @JoinColumn({ name: "provider_id" })
     provider: Users;
 
+    @Column()
+    user_id: string;
+
+    @ManyToOne(() => Users)
+    @JoinColumn({ name: "user_id" })
+    user: Users;
+
     @Column("timestamp")
     date: Date;
 

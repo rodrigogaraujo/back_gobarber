@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { celebrate, Segments, Joi } from "celebrate";
 
 import ensureAuthentication from "@modules/users/infra/http/middlewares/ensureAuthentication";
 import ListProvidersController from "../controllers/ListProvidersController";
@@ -22,10 +23,20 @@ const listDayAviabilityController = new ProviderDayAviabilityController();
 listProvidersRoute.get("/", listProvidersController.index);
 listProvidersRoute.get(
     "/:provider-id/month-aviability",
+    celebrate({
+        [Segments.PARAMS]: {
+            provider_id: Joi.string().uuid().required(),
+        },
+    }),
     listMonthAviabilityController.index,
 );
 listProvidersRoute.get(
     "/:provider-id/day-aviability",
+    celebrate({
+        [Segments.PARAMS]: {
+            provider_id: Joi.string().uuid().required(),
+        },
+    }),
     listDayAviabilityController.index,
 );
 export default listProvidersRoute;
